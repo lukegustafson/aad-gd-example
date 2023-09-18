@@ -68,14 +68,14 @@ Perform division on two AAD nodes: node1 / node2
 */
 function aad_div(node1, node2)
 {
-    if(node2.value == 0)
+	if(node2.value == 0)
 		throw "Division by 0";
 	
 	var node = { 
 		value: node1.value / node2.value, 
 		parents: [node1, node2], 
 		//d/dx(x/y) = 1/y, d/dy(x/y) = -x/y^2
-		ddchildren: [ 1 / node2.value, -node1.value / (node2.value * node2.value) ] 
+		ddparents: [ 1 / node2.value, -node1.value / (node2.value * node2.value) ] 
 	};
 	aad_stack.push(node);
 	return node;
