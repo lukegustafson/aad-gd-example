@@ -304,7 +304,7 @@ function objective_function(heights)
 	//Run AAD
 	aad_calc_derivs();
 	
-	//Return the total error and the gradient
+	//Return the total length and the gradient
 	return [total_length.value, heights_aad.map(c => c.derivative)];
 }
 
