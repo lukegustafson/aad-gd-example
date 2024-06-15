@@ -3,7 +3,7 @@ Begin a new calculation for adjoint (reverse) algorithmic differentiation
 */
 function aad_begin()
 {
-  aad_stack = [];
+	aad_stack = [];
 }
 
 /*
@@ -11,13 +11,13 @@ Create an AAD node from a number
 */
 function aad_const(c)
 {
-  const node = {
-    value: c,
-    parents: [],     //no inputs to a constant
-    ddparents: []
-  };
-  aad_stack.push(node);
-  return node;
+	const node = {
+    	value: c,
+		parents: [],     //no inputs to a constant
+		ddparents: []
+	};
+	aad_stack.push(node);
+	return node;
 }
 
 /*
@@ -25,13 +25,13 @@ Perform addition on two AAD nodes
 */
 function aad_add(node1, node2)
 {
-  const node = {
-    value: node1.value + node2.value, 
-    parents: [node1, node2], //inputs to our addition
-    ddparents: [1, 1] //derivative is 1 for addition
-  };
-  aad_stack.push(node);
-  return node;
+	const node = {
+		value: node1.value + node2.value, 
+		parents: [node1, node2], //inputs to our addition
+		ddparents: [1, 1] //derivative is 1 for addition
+	};
+	aad_stack.push(node);
+	return node;
 }
 
 /*
@@ -39,13 +39,13 @@ Perform subtraction on two AAD nodes: node1 - node2
 */
 function aad_sub(node1, node2)
 {
-  const node = {
-    value: node1.value - node2.value, 
-    parents: [node1, node2],
-    ddparents: [1, -1]
-  };
-  aad_stack.push(node);
-  return node;
+	const node = {
+		value: node1.value - node2.value, 
+		parents: [node1, node2],
+		ddparents: [1, -1]
+	};
+	aad_stack.push(node);
+	return node;
 }
 
 /*
@@ -53,14 +53,14 @@ Perform multiplication on two AAD nodes
 */
 function aad_mul(node1, node2)
 {
-  const node = {
-    value: node1.value * node2.value, 
-    parents: [node1, node2], //inputs to our multiplication
-    //d/dx(xy) = y, d/dy(xy) = x
-    ddparents: [node2.value, node1.value ]
-  };
-  aad_stack.push(node);
-  return node;
+	const node = {
+		value: node1.value * node2.value, 
+		parents: [node1, node2], //inputs to our multiplication
+		//d/dx(xy) = y, d/dy(xy) = x
+		ddparents: [node2.value, node1.value ]
+	};
+	aad_stack.push(node);
+	return node;
 }
 
 /*
@@ -132,20 +132,20 @@ Apply the natural logarithm to an AAD node
 */
 function aad_log(node)
 {
-  const x = Math.log(node.value);
+	const x = Math.log(node.value);
 
-  //Catch errors to help debugging
-  if(isNaN(x))
-    throw "NAN from log(" + node.value + ")";
+	//Catch errors to help debugging
+	if(isNaN(x))
+		throw "NAN from log(" + node.value + ")";
 
-  const ret = { 
-    value: x, 
-    parents: [node], 
-    //d/dx(log(x)) = 1/x
-    ddparents: [1 / node.value]
-  };
-  aad_stack.push(ret);
-  return ret;
+	const ret = { 
+		value: x, 
+		parents: [node], 
+		//d/dx(log(x)) = 1/x
+		ddparents: [1 / node.value]
+	};
+	aad_stack.push(ret);
+	return ret;
 }
 
 /*
@@ -155,22 +155,22 @@ are saved into the "derivative" field of each AAD node.
 */
 function aad_calc_derivs()
 {
-  //Start with the final node. Derivative of the node wrt itself is 1
-  aad_stack[aad_stack.length - 1].derivative = 1;
+	//Start with the final node. Derivative of the node wrt itself is 1
+	aad_stack[aad_stack.length - 1].derivative = 1;
 
-  //Walk up the calculation graph
-  for(let n = aad_stack.length - 1; n >= 0; n--)
-  {
-    const node = aad_stack[n];
+	//Walk up the calculation graph
+	for(let n = aad_stack.length - 1; n >= 0; n--)
+	{
+		const node = aad_stack[n];
 
-    //Apply chain rule to each parent of the node
-    for(let i = 0; i < node.parents.length; i++)
-    {
-      const parent = node.parents[i];
-      parent.derivative = (parent.derivative || 0) + 
-        node.ddparents[i] * node.derivative;
-    }
-  }
+		//Apply chain rule to each parent of the node
+		for(let i = 0; i < node.parents.length; i++)
+		{
+			const parent = node.parents[i];
+			parent.derivative = (parent.derivative || 0) + 
+			node.ddparents[i] * node.derivative;
+		}
+	}
 }
 
 /*
