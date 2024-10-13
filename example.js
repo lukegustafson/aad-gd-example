@@ -260,6 +260,9 @@ function gradient_descent_minimize(f, guess, max_iter)
 
 /*
 Example using the AAD functions
+
+d f(X,Y) = log(X1 * Y1 + X2 * Y2 + ... )
+at X = [1,2,3,4], Y = [2,3,4,5]
 */
 aad_begin();
 const xs = [1, 2, 3, 4].map(aad_const);
@@ -274,6 +277,10 @@ console.log("Derivatives wrt xs: " + xs.map(x => x.derivative));
 console.log("Derivatives wrt ys: " + ys.map(y => y.derivative));
 
 
+/*
+d f(x,y) = x/y
+at x = 4, y = 2
+*/
 
 aad_begin();
 const x = aad_const(4);
@@ -318,7 +325,7 @@ function objective_function(heights)
 	//Run AAD
 	aad_calc_derivs();
 	
-	//Return the total error and the derivative wrt the polynomial coefficents
+	//Return the total error and the derivative wrt y_i
 	return [total_length.value, heights_aad.map(c => c.derivative)];
 }
 
